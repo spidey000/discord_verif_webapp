@@ -13,7 +13,7 @@ export interface SignMessageResult {
  * @returns Promise with signature and message
  */
 export async function signMessage(
-  signMessage: SignerWalletAdapterProps['signMessage'],
+  signMessage: ((message: Uint8Array) => Promise<Uint8Array>) | undefined,
   jwt: string
 ): Promise<SignMessageResult> {
   if (!signMessage) {

@@ -11,28 +11,28 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Discord Wallet Verification | dream_liquidity',
-  description: 'Verify your Solana wallet to access premium Discord features and earn XP',
-  keywords: ['Solana', 'Discord', 'Wallet', 'Verification', 'dream_liquidity', 'Web3'],
-  authors: [{ name: 'dream_liquidity Team' }],
+  title: 'Sendit - Solana Trading Platform',
+  description: 'Trade Solana tokens with leverage on the fastest decentralized trading platform',
+  keywords: ['Solana', 'Trading', 'DeFi', 'Leverage', 'Sendit', 'Web3'],
+  authors: [{ name: 'Sendit Team' }],
   robots: 'noindex, nofollow', // Prevent search engine indexing for security
   openGraph: {
-    title: 'Discord Wallet Verification | dream_liquidity',
-    description: 'Verify your Solana wallet to access premium Discord features',
+    title: 'Sendit - Solana Trading Platform',
+    description: 'Trade Solana tokens with leverage on the fastest decentralized trading platform',
     type: 'website',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'dream_liquidity Discord Verification',
+        alt: 'Sendit Trading Platform',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Discord Wallet Verification | dream_liquidity',
-    description: 'Verify your Solana wallet to access premium Discord features',
+    title: 'Sendit - Solana Trading Platform',
+    description: 'Trade Solana tokens with leverage on the fastest decentralized trading platform',
     images: ['/og-image.png'],
   },
 }
@@ -53,7 +53,7 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <WalletProvider>
-          <div className="min-h-screen bg-gradient-to-br from-discord-darker via-discord-dark to-gray-900">
+          <div className="min-h-screen bg-gradient-to-br from-sendit-darker via-sendit-dark to-sendit-gray-900">
             {children}
           </div>
         </WalletProvider>

@@ -8,9 +8,6 @@ import { clusterApiUrl } from '@solana/web3.js'
 import {
   PhantomWalletAdapter,
   SolflareWalletAdapter,
-  BackpackWalletAdapter,
-  GlowWalletAdapter,
-  SlopeWalletAdapter,
   TorusWalletAdapter,
 } from '@solana/wallet-adapter-wallets'
 
@@ -33,10 +30,9 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
       // Popular wallet adapters
       new PhantomWalletAdapter(),
       new SolflareWalletAdapter({ network }),
-      new BackpackWalletAdapter(),
-      new GlowWalletAdapter(),
-      new SlopeWalletAdapter(),
       new TorusWalletAdapter(),
+      // Note: Backpack, Glow, and other wallets that support the Wallet Standard
+      // will be automatically detected without needing specific adapters
     ],
     [network]
   )

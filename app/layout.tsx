@@ -1,16 +1,20 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { WalletProvider } from '@/components/WalletProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
+
 export const metadata: Metadata = {
   title: 'Discord Wallet Verification | dream_liquidity',
   description: 'Verify your Solana wallet to access premium Discord features and earn XP',
   keywords: ['Solana', 'Discord', 'Wallet', 'Verification', 'dream_liquidity', 'Web3'],
   authors: [{ name: 'dream_liquidity Team' }],
-  viewport: 'width=device-width, initial-scale=1',
   robots: 'noindex, nofollow', // Prevent search engine indexing for security
   openGraph: {
     title: 'Discord Wallet Verification | dream_liquidity',

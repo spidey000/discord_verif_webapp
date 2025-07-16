@@ -1,0 +1,55 @@
+@font-face {
+  font-family: 'Sendit';
+  src: url('/fonts/035951aefad7b653-s.p.ttf') format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sendit';
+  src: url('/fonts/26d4368bf94c0ec4-s.p.ttf') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sendit';
+  src: url('/fonts/3478b6abef19b3b3-s.p.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sendit';
+  src: url('/fonts/463cef7d4672ba68-s.p.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sendit';
+  src: url('/fonts/684e5662d94c69e1-s.p.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sendit';
+  src: url('/fonts/98bcafdc59ee6d65-s.p.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sendit';
+  src: url('/fonts/be2416cbb012c256-s.p.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Sendit';
+  src: url('/fonts/c690761783507ad4-s.p.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}

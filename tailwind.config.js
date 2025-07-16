@@ -7,6 +7,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'sendit': ['Sendit', 'Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         sendit: {
           primary: '#9aff00',

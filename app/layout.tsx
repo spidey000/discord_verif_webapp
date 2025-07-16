@@ -1,9 +1,7 @@
 import type { Metadata, Viewport } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
+import './fonts.css'
 import { WalletProvider } from '@/components/WalletProvider'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -51,7 +49,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className={inter.className}>
+      <body className="font-sendit">
         <WalletProvider>
           <div className="min-h-screen bg-gradient-to-br from-sendit-darker via-sendit-dark to-sendit-gray-900">
             {children}

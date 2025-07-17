@@ -5,7 +5,8 @@ import { useSearchParams } from 'next/navigation'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui'
 import { signMessage } from '@/lib/wallet'
-import { verifyWallet } from '@/lib/api'
+import { verifyWallet, getEnvironmentInfo } from '@/lib/api'
+import { getConfigDebugInfo } from '@/lib/config'
 import { DiscordIcon, SolanaIcon, CheckIcon, XIcon, LoadingIcon } from '@/components/Icons'
 import { Suspense } from 'react'
 
@@ -24,6 +25,7 @@ function ConfirmationPageContent() {
   const [error, setError] = useState<VerificationError | null>(null)
   const [jwt, setJwt] = useState<string | null>(null)
   const [isExpired, setIsExpired] = useState(false)
+  const [showDebugInfo, setShowDebugInfo] = useState(false)
 
   // Parse JWT from URL parameters
   useEffect(() => {
@@ -184,19 +186,19 @@ function ConfirmationPageContent() {
   const statusMessage = getStatusMessage()
 
   return (
-    <main className="container mx-auto px-4 py-12 min-h-screen flex items-center justify-center">
-      <div className="max-w-md mx-auto">
+    <main className="min-h-screen w-full overflow-x-hidden flex items-center justify-center p-4">
+      <div className="w-full max-w-md mx-auto">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center items-center gap-4 mb-6">
-            <DiscordIcon className="w-12 h-12 text-discord-blurple" />
-            <div className="w-8 h-0.5 bg-gradient-to-r from-discord-blurple to-solana-purple"></div>
-            <SolanaIcon className="w-12 h-12 text-solana-purple" />
+        <div className="text-center mb-6 sm:mb-8">
+          <div className="flex justify-center items-center gap-2 sm:gap-4 mb-4 sm:mb-6">
+            <DiscordIcon className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-discord-blurple" />
+            <div className="w-6 sm:w-8 h-0.5 bg-gradient-to-r from-discord-blurple to-solana-purple"></div>
+            <SolanaIcon className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-solana-purple" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">
+          <h1 className="text-xl sm:text-2xl font-bold text-white mb-2">
             Wallet Verification
           </h1>
-          <p className="text-gray-400">
+          <p className="text-sm sm:text-base text-gray-400">
             Sendit Discord Bot
           </p>
         </div>
@@ -204,16 +206,16 @@ function ConfirmationPageContent() {
         {/* Main Card */}
         <div className="card card-glow">
           {/* Status Icon */}
-          <div className="text-center mb-6">
+          <div className="text-center mb-4 sm:mb-6">
             {getStatusIcon()}
           </div>
 
           {/* Status Message */}
-          <div className="text-center mb-8">
-            <h2 className="text-xl font-semibold mb-2 text-white">
+          <div className="text-center mb-6 sm:mb-8">
+            <h2 className="text-lg sm:text-xl font-semibold mb-2 text-white leading-tight">
               {statusMessage.title}
             </h2>
-            <p className="text-gray-400 text-sm">
+            <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">
               {statusMessage.subtitle}
             </p>
           </div>
@@ -222,8 +224,8 @@ function ConfirmationPageContent() {
           <div className="space-y-4">
             {status === 'connect_wallet' && (
               <div className="text-center">
-                <WalletMultiButton className="!w-full" />
-                <p className="text-xs text-gray-500 mt-3">
+                <WalletMultiButton className="!w-full !text-sm sm:!text-base !py-2 sm:!py-3" />
+                <p className="text-xs text-gray-500 mt-3 px-2">
                   Supported wallets: Phantom, Solflare, Backpack, and more
                 </p>
               </div>
@@ -231,7 +233,7 @@ function ConfirmationPageContent() {
 
             {status === 'signing' && (
               <div className="status-warning text-center">
-                <p className="text-sm">
+                <p className="text-xs sm:text-sm px-2">
                   Check your wallet for a signature request and approve it to continue.
                 </p>
               </div>
@@ -240,7 +242,7 @@ function ConfirmationPageContent() {
             {status === 'verifying' && (
               <div className="text-center">
                 <div className="loading-spinner mx-auto mb-4"></div>
-                <p className="text-sm text-gray-400">
+                <p className="text-xs sm:text-sm text-gray-400">
                   Confirming with Discord bot...
                 </p>
               </div>
@@ -248,26 +250,26 @@ function ConfirmationPageContent() {
 
             {status === 'success' && (
               <div className="status-success text-center">
-                <p className="font-medium mb-2">✅ Wallet Successfully Verified!</p>
-                <p className="text-sm opacity-90">
+                <p className="font-medium mb-2 text-sm sm:text-base">✅ Wallet Successfully Verified!</p>
+                <p className="text-xs sm:text-sm opacity-90 px-2">
                   Your Discord account is now verified. You can close this page and return to Discord to start earning XP!
                 </p>
               </div>
             )}
 
             {status === 'error' && (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div className="status-error">
-                  <p className="font-medium mb-2">❌ {error?.message}</p>
+                  <p className="font-medium mb-2 text-sm sm:text-base">❌ {error?.message}</p>
                   {error?.details && (
-                    <p className="text-sm opacity-90">{error.details}</p>
+                    <p className="text-xs sm:text-sm opacity-90">{error.details}</p>
                   )}
                 </div>
                 
                 {!isExpired && (
                   <button
                     onClick={handleRetry}
-                    className="btn-primary w-full"
+                    className="btn-primary w-full text-sm sm:text-base py-2 sm:py-3"
                   >
                     Try Again
                   </button>
@@ -275,12 +277,12 @@ function ConfirmationPageContent() {
                 
                 {isExpired && (
                   <div className="text-center">
-                    <p className="text-sm text-gray-400 mb-3">
+                    <p className="text-xs sm:text-sm text-gray-400 mb-3 px-2">
                       Please request a new verification link from Discord
                     </p>
                     <a 
                       href="https://discord.gg/your-invite-link" 
-                      className="btn-primary inline-flex items-center gap-2"
+                      className="btn-primary inline-flex items-center justify-center gap-2 w-full text-sm sm:text-base py-2 sm:py-3"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -295,9 +297,9 @@ function ConfirmationPageContent() {
 
           {/* Footer */}
           {status !== 'error' && (
-            <div className="mt-8 pt-6 border-t border-gray-700">
+            <div className="mt-6 sm:mt-8 pt-4 sm:pt-6 border-t border-gray-700">
               <div className="text-center">
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-500 px-2">
                   🔒 This verification only requires signing a message. 
                   We never ask for private keys or seed phrases.
                 </p>
@@ -306,11 +308,55 @@ function ConfirmationPageContent() {
           )}
         </div>
 
+        {/* Debug Info Toggle */}
+        <div className="text-center mt-4 sm:mt-6">
+          <button
+            onClick={() => setShowDebugInfo(!showDebugInfo)}
+            className="text-xs text-gray-500 hover:text-gray-400 transition-colors"
+          >
+            {showDebugInfo ? 'Hide' : 'Show'} Debug Info
+          </button>
+        </div>
+
+        {/* Debug Information */}
+        {showDebugInfo && (
+          <div className="mt-4 p-4 bg-gray-800 rounded-lg border border-gray-700">
+            <h3 className="text-sm font-semibold mb-2 text-gray-300">Debug Information</h3>
+            <div className="space-y-2 text-xs text-gray-400">
+              <div>
+                <strong>Environment:</strong> {getEnvironmentInfo().nodeEnv || 'unknown'}
+              </div>
+              <div>
+                <strong>API URL:</strong> {getEnvironmentInfo().apiBaseUrl}
+              </div>
+              <div>
+                <strong>Hostname:</strong> {getEnvironmentInfo().hostname}
+              </div>
+              <div>
+                <strong>Protocol:</strong> {getEnvironmentInfo().protocol}
+              </div>
+              <div>
+                <strong>Config Valid:</strong> {getConfigDebugInfo().validation.isValid ? 'Yes' : 'No'}
+              </div>
+              {!getConfigDebugInfo().validation.isValid && (
+                <div className="mt-2 p-2 bg-red-900/20 border border-red-700 rounded">
+                  <div className="font-semibold text-red-400">Configuration Issues:</div>
+                  <ul className="mt-1 space-y-1">
+                    {getConfigDebugInfo().validation.errors.map((error, index) => (
+                      <li key={index} className="text-red-300">• {error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Back to Home */}
-        <div className="text-center mt-8">
+        <div className="text-center mt-6 sm:mt-8">
           <a 
             href="/" 
-            className="text-sm text-gray-400 hover:text-white transition-colors"
+            className="text-xs sm:text-sm text-gray-400 hover:text-white transition-colors"
           >
             ← Back to Home
           </a>

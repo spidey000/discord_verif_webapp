@@ -49,9 +49,9 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body className="font-sendit">
+      <body className="font-sendit overflow-x-hidden">
         <WalletProvider>
-          <div className="min-h-screen bg-gradient-to-br from-sendit-darker via-sendit-dark to-sendit-gray-900">
+          <div className="min-h-screen w-full bg-gradient-to-br from-sendit-darker via-sendit-dark to-sendit-gray-900">
             {children}
           </div>
         </WalletProvider>

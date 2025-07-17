@@ -13,7 +13,24 @@ interface VerificationResponse {
   message?: string
 }
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_BOT_API_URL || 'http://localhost:8080'
+// Environment-based API configuration
+const getApiBaseUrl = (): string => {
+  // Priority: Environment variable > Production fallback > Development fallback
+  if (process.env.NEXT_PUBLIC_BOT_API_URL) {
+    return process.env.NEXT_PUBLIC_BOT_API_URL
+  }
+  
+  // Check if we're in production environment
+  if (process.env.NODE_ENV === 'production' || typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
+    // Production API URL - replace with your actual production API
+    return process.env.NEXT_PUBLIC_API_URL || 'https://your-production-api.com'
+  }
+  
+  // Development fallback
+  return 'http://localhost:8080'
+}
+
+const API_BASE_URL = getApiBaseUrl()
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -21,7 +38,10 @@ const apiClient = axios.create({
   timeout: 30000, // 30 second timeout
   headers: {
     'Content-Type': 'application/json',
+    'Accept': 'application/json',
   },
+  // Add retry logic for network failures
+  validateStatus: (status) => status < 500, // Don't throw for 4xx errors
 })
 
 /**
@@ -32,6 +52,16 @@ const apiClient = axios.create({
 export async function verifyWallet(request: VerificationRequest): Promise<VerificationResponse> {
   try {
     console.log('Submitting verification to bot API...')
+    console.log('Environment info:', getEnvironmentInfo())
+    
+    // Validate request data
+    if (!request.jwt || !request.wallet || !request.signature) {
+      return {
+        success: false,
+        error: 'Invalid request data',
+        details: 'Missing required verification parameters.'
+      }
+    }
     
     const response = await apiClient.post('/api/confirm', {
       jwt: request.jwt,
@@ -92,7 +122,17 @@ export async function verifyWallet(request: VerificationRequest): Promise<Verifi
             }
         }
       } else if (axiosError.request) {
-        // Request was made but no response received
+        // Request was made but no response received - likely network/CORS issue
+        const isProductionError = API_BASE_URL.includes('localhost') && typeof window !== 'undefined' && window.location.hostname !== 'localhost'
+        
+        if (isProductionError) {
+          return {
+            success: false,
+            error: 'Configuration Error',
+            details: 'The verification system is not properly configured for production. Please contact support.'
+          }
+        }
+        
         return {
           success: false,
           error: 'Connection failed',
@@ -130,4 +170,19 @@ export async function checkApiHealth(): Promise<boolean> {
  */
 export function getApiBaseUrl(): string {
   return API_BASE_URL
+}
+
+/**
+ * Gets environment information for debugging
+ * @returns Object with environment details
+ */
+export function getEnvironmentInfo() {
+  return {
+    apiBaseUrl: API_BASE_URL,
+    nodeEnv: process.env.NODE_ENV,
+    hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
+    protocol: typeof window !== 'undefined' ? window.location.protocol : 'unknown',
+    hasApiEnvVar: !!process.env.NEXT_PUBLIC_BOT_API_URL,
+    hasProductionApiEnvVar: !!process.env.NEXT_PUBLIC_API_URL,
+  }
 }

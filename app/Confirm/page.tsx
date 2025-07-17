@@ -197,7 +197,7 @@ function ConfirmationPageContent() {
             Wallet Verification
           </h1>
           <p className="text-gray-400">
-            dream_liquidity Discord Bot
+            Sendit Discord Bot
           </p>
         </div>
 

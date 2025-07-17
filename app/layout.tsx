@@ -9,28 +9,28 @@ export const viewport: Viewport = {
 }
 
 export const metadata: Metadata = {
-  title: 'Sendit - Solana Trading Platform',
-  description: 'Trade Solana tokens with leverage on the fastest decentralized trading platform',
-  keywords: ['Solana', 'Trading', 'DeFi', 'Leverage', 'Sendit', 'Web3'],
+  title: 'Sendit - Discord Wallet Verification',
+  description: 'Securely link your Solana wallet to Discord and unlock exclusive Sendit community features',
+  keywords: ['Solana', 'Discord', 'Wallet', 'Verification', 'Sendit', 'Web3', 'Community'],
   authors: [{ name: 'Sendit Team' }],
   robots: 'noindex, nofollow', // Prevent search engine indexing for security
   openGraph: {
-    title: 'Sendit - Solana Trading Platform',
-    description: 'Trade Solana tokens with leverage on the fastest decentralized trading platform',
+    title: 'Sendit - Discord Wallet Verification',
+    description: 'Securely link your Solana wallet to Discord and unlock exclusive Sendit community features',
     type: 'website',
     images: [
       {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Sendit Trading Platform',
+        alt: 'Sendit Wallet Verification',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sendit - Solana Trading Platform',
-    description: 'Trade Solana tokens with leverage on the fastest decentralized trading platform',
+    title: 'Sendit - Discord Wallet Verification',
+    description: 'Securely link your Solana wallet to Discord and unlock exclusive Sendit community features',
     images: ['/og-image.png'],
   },
 }

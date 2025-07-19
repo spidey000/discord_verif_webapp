@@ -1,10 +1,8 @@
-# Sendit Discord Wallet Verification App
+# Sendit Wallet Verification App
 
-A Next.js web application for verifying Solana wallet ownership for Sendit Discord bot users. This app provides a secure interface for users to connect their Solana wallets and sign verification messages.
+A Next.js web application for verifying Solana wallet ownership. This app provides a secure interface for users to connect their Solana wallets and sign verification messages.
 
 **🌐 Live Application:** https://discord-verif-webapp.vercel.app/
-
-**🤖 Discord Bot:** Sendit Bot (requires local server running on port 8080)
 
 ## 🚀 Features
 
@@ -24,9 +22,8 @@ A Next.js web application for verifying Solana wallet ownership for Sendit Disco
 
 ## 📋 Prerequisites
 
-- Node.js 18+ 
+- Node.js 18+
 - npm or yarn
-- Discord bot with Solana verification API
 
 ## ⚙️ Installation
 
@@ -34,21 +31,16 @@ A Next.js web application for verifying Solana wallet ownership for Sendit Disco
 
 The frontend is already deployed at https://discord-verif-webapp.vercel.app/
 
-### Backend (Local Development)
+### Local Development (Optional)
 
-1. **Clone and navigate to webapp directory**:
-```bash
-cd webapp
-```
-
-2. **Install dependencies**:
+1. **Install dependencies**:
 ```bash
 npm install
 # or
 yarn install
 ```
 
-3. **Configure environment variables**:
+2. **Configure environment variables**:
 ```bash
 cp .env.example .env.local
 ```
@@ -56,17 +48,11 @@ cp .env.example .env.local
 Edit `.env.local`:
 ```env
 NEXT_PUBLIC_SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
-NEXT_PUBLIC_BOT_API_URL=http://localhost:8080
-NEXT_PUBLIC_API_URL=http://localhost:8080
+NEXT_PUBLIC_BOT_API_URL=https://gg0099.space
+NEXT_PUBLIC_API_URL=https://gg0099.space
 ```
 
-4. **Start Discord bot server** (must be running on port 8080):
-```bash
-# In your Discord bot directory
-python main.py
-```
-
-5. **For local frontend development** (optional):
+3. **Start local frontend development**:
 ```bash
 npm run dev
 # Navigate to http://localhost:3000
@@ -77,24 +63,24 @@ npm run dev
 ### Frontend (Vercel)
 - **URL**: https://discord-verif-webapp.vercel.app/
 - **Environment**: Production
-- **API Target**: http://localhost:8080 (local Discord bot)
+- **API Target**: https://gg0099.space
 
-### Backend (Local)
-- **Discord Bot**: Running on localhost:8080
-- **Environment**: Development
+### Backend (VPS Server)
+- **API Endpoint**: https://gg0099.space
+- **Environment**: Production
 - **CORS**: Configured to allow https://discord-verif-webapp.vercel.app
 
 ### Environment Variables (Vercel Dashboard)
 ```env
 NEXT_PUBLIC_SOLANA_RPC_URL=https://api.mainnet-beta.solana.com
-NEXT_PUBLIC_BOT_API_URL=http://localhost:8080
-NEXT_PUBLIC_API_URL=http://localhost:8080
+NEXT_PUBLIC_BOT_API_URL=https://gg0099.space
+NEXT_PUBLIC_API_URL=https://gg0099.space
 ```
 
 ### For Production Deployment
-1. Deploy Discord bot API to production server
+1. Deploy API to production server
 2. Update `NEXT_PUBLIC_BOT_API_URL` in Vercel to production URL
-3. Update CORS configuration in Discord bot
+3. Update CORS configuration in API
 
 ## 🔧 Configuration
 
@@ -103,13 +89,13 @@ NEXT_PUBLIC_API_URL=http://localhost:8080
 | Variable | Description | Current Value | Production Value |
 |----------|-------------|---------------|------------------|
 | `NEXT_PUBLIC_SOLANA_RPC_URL` | Solana RPC endpoint | `https://api.mainnet-beta.solana.com` | `https://api.mainnet-beta.solana.com` |
-| `NEXT_PUBLIC_BOT_API_URL` | Discord bot API URL | `http://localhost:8080` | `https://your-production-api.com` |
-| `NEXT_PUBLIC_API_URL` | Fallback API URL | `http://localhost:8080` | `https://your-production-api.com` |
+| `NEXT_PUBLIC_BOT_API_URL` | API URL | `https://gg0099.space` | `https://your-production-api.com` |
+| `NEXT_PUBLIC_API_URL` | Fallback API URL | `https://gg0099.space` | `https://your-production-api.com` |
 
 ### Supported Wallets
 
 - **Phantom** - Most popular Solana wallet
-- **Solflare** - Feature-rich browser and mobile wallet  
+- **Solflare** - Feature-rich browser and mobile wallet
 - **Backpack** - Modern wallet with built-in dApp browser
 - **Glow** - Non-custodial wallet with staking features
 - **Slope** - Mobile-first wallet experience
@@ -135,7 +121,7 @@ The app uses a custom theme inspired by Discord and Solana branding:
 colors: {
   discord: {
     blurple: '#5865F2',
-    green: '#57F287', 
+    green: '#57F287',
     red: '#ED4245',
     dark: '#2C2F33',
     darker: '#23272A',
@@ -168,16 +154,16 @@ const wallets = useMemo(() => [
 
 ## 📊 API Integration
 
-The app communicates with your Discord bot's API:
+The app communicates with the API:
 
 ### Current Setup
 - **Frontend**: https://discord-verif-webapp.vercel.app/
-- **Backend**: http://localhost:8080 (local Discord bot)
-- **CORS**: Frontend domain allowed in bot configuration
+- **Backend**: https://gg0099.space (VPS Server)
+- **CORS**: Frontend domain allowed in API configuration
 
 ### Verification Endpoint
 ```
-POST http://localhost:8080/api/confirm
+POST https://gg0099.space/api/confirm
 {
   "jwt": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...",
   "wallet": "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU",
@@ -187,16 +173,7 @@ POST http://localhost:8080/api/confirm
 
 ### Health Check
 ```
-GET http://localhost:8080/api/health
-```
-
-### Required Discord Bot Configuration
-```python
-# In your Discord bot's API server
-CORS_ORIGINS = [
-    "https://discord-verif-webapp.vercel.app",
-    "http://localhost:3000"  # For local development
-]
+GET https://gg0099.space/api/health
 ```
 
 ## 🔍 Troubleshooting
@@ -209,8 +186,7 @@ CORS_ORIGINS = [
 - Check browser console for errors
 
 **Verification failing**:
-- Ensure Discord bot is running on localhost:8080
-- Check bot API is accessible: `curl http://localhost:8080/api/health`
+- Check API is accessible: `curl https://gg0099.space/api/health`
 - Verify JWT token hasn't expired (10 minutes)
 - Check CORS configuration allows https://discord-verif-webapp.vercel.app
 - Use debug info toggle on confirmation page for diagnostics
@@ -230,7 +206,6 @@ DEBUG=* npm run dev
 ## 📁 Project Structure
 
 ```
-webapp/
 ├── app/
 │   ├── Confirm/          # Verification page
 │   ├── globals.css       # Global styles
@@ -259,15 +234,14 @@ webapp/
 
 ## 📄 License
 
-This project is part of the Sendit Discord bot ecosystem.
+This project is part of the Sendit ecosystem.
 
 ## 🆘 Support
 
 For support and questions:
 - Check the troubleshooting section above
 - Use the debug info toggle on the confirmation page
-- Review browser console for error messages  
-- Ensure Discord bot is running on localhost:8080
+- Review browser console for error messages
 - Verify CORS configuration allows the Vercel frontend
 - Check that all environment variables are correctly configured
 
@@ -280,5 +254,5 @@ The confirmation page includes a "Show Debug Info" button that displays:
 
 ### Common Network Issues
 - **CSP Violations**: Check browser console for Content Security Policy errors
-- **CORS Errors**: Ensure Discord bot allows https://discord-verif-webapp.vercel.app
-- **Connection Failures**: Verify Discord bot is running and accessible on port 8080
+- **CORS Errors**: Ensure API allows https://discord-verif-webapp.vercel.app
+- **Connection Failures**: Verify API is running and accessible

@@ -18,7 +18,7 @@ const nextConfig = {
       "img-src 'self' data: https:",
       "font-src 'self' data:",
       // Allow connections to Solana RPCs and API endpoints
-      `connect-src 'self' ${apiUrl} ${botApiUrl} https://*.solana.com https://*.projectserum.com https://*.ankr.com wss://*.solana.com https://api.mainnet-beta.solana.com https://solana-api.projectserum.com https://rpc.ankr.com`,
+      `connect-src 'self' ${apiUrl} ${botApiUrl} https://gg0099.space https://*.solana.com https://*.projectserum.com https://*.ankr.com wss://*.solana.com https://api.mainnet-beta.solana.com https://solana-api.projectserum.com https://rpc.ankr.com`,
       "frame-src 'none'",
       "object-src 'none'",
       "base-uri 'self'",

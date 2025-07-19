@@ -14,7 +14,7 @@ interface VerificationResponse {
 }
 
 // Environment-based API configuration
-const getApiBaseUrl = (): string => {
+function getApiBaseUrlInternal(): string {
   // Priority: Environment variable > Production fallback > Development fallback
   if (process.env.NEXT_PUBLIC_BOT_API_URL) {
     return process.env.NEXT_PUBLIC_BOT_API_URL
@@ -44,7 +44,7 @@ const getApiBaseUrl = (): string => {
 
 let API_BASE_URL: string
 try {
-  API_BASE_URL = getApiBaseUrl()
+  API_BASE_URL = getApiBaseUrlInternal()
 } catch (error) {
   // If configuration fails, set a placeholder that will cause clear errors
   API_BASE_URL = 'https://api-not-configured.example.com'

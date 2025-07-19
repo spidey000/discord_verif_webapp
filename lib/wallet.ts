@@ -22,11 +22,41 @@ export async function signMessage(
 
   try {
     // Parse JWT to extract UUID for message
-    const payload = JSON.parse(atob(jwt.split('.')[1]))
-    const { UUID: tokenUuid } = payload
+    const jwtParts = jwt.split('.')
+    if (jwtParts.length !== 3) {
+      throw new Error('Invalid verification token: malformed JWT structure')
+    }
 
-    if (!tokenUuid) {
-      throw new Error('Invalid verification token: missing UUID')
+    let payload: { UUID: string; user_id: number; exp: number; iat?: number }
+    try {
+      payload = JSON.parse(atob(jwtParts[1]))
+    } catch {
+      throw new Error('Invalid verification token: corrupted payload')
+    }
+
+    const { UUID: tokenUuid, user_id, exp } = payload
+
+    // Validate required fields
+    if (!tokenUuid || typeof tokenUuid !== 'string') {
+      throw new Error('Invalid verification token: missing or invalid UUID')
+    }
+    if (!user_id || typeof user_id !== 'number') {
+      throw new Error('Invalid verification token: missing or invalid user ID')
+    }
+    if (!exp || typeof exp !== 'number') {
+      throw new Error('Invalid verification token: missing or invalid expiration')
+    }
+
+    // Check if token is expired
+    const currentTime = Math.floor(Date.now() / 1000)
+    if (exp < currentTime) {
+      throw new Error('Verification token has expired. Please request a new verification link.')
+    }
+
+    // Validate UUID format (basic check)
+    const uuidPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+    if (!uuidPattern.test(tokenUuid)) {
+      throw new Error('Invalid verification token: malformed UUID')
     }
 
     // Create the verification message that matches what the bot expects
@@ -41,16 +71,16 @@ export async function signMessage(
       signature,
       message
     }
-  } catch (error: any) {
-    console.error('Error signing message:', error)
-    
+  } catch (error: unknown) {
     // Provide more specific error messages
-    if (error.message?.includes('User rejected')) {
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    
+    if (errorMessage.includes('User rejected')) {
       throw new Error('Signature request was cancelled. Please try again and approve the signature request.')
-    } else if (error.message?.includes('not supported')) {
+    } else if (errorMessage.includes('not supported')) {
       throw new Error('Your wallet does not support message signing. Please try a different wallet.')
     } else {
-      throw new Error(`Failed to sign verification message: ${error.message || 'Unknown error'}`)
+      throw new Error(`Failed to sign verification message: ${errorMessage || 'Unknown error'}`)
     }
   }
 }

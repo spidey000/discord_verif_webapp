@@ -21,16 +21,49 @@ const getApiBaseUrl = (): string => {
   }
   
   // Check if we're in production environment
-  if (process.env.NODE_ENV === 'production' || typeof window !== 'undefined' && window.location.hostname !== 'localhost') {
-    // Production API URL - replace with your actual production API
-    return process.env.NEXT_PUBLIC_API_URL || 'https://your-production-api.com'
+  if (process.env.NODE_ENV === 'production' || (typeof window !== 'undefined' && window.location.hostname !== 'localhost')) {
+    // Production API URL - must be configured for production deployments
+    const productionApiUrl = process.env.NEXT_PUBLIC_API_URL
+    
+    if (!productionApiUrl || productionApiUrl === 'https://your-production-api.com') {
+      // In production, we should fail fast if API URL is not configured
+      if (typeof window !== 'undefined') {
+        // Client-side: show user-friendly error
+        throw new Error('The verification system is not properly configured. Please contact support.')
+      }
+      // Server-side: log warning but continue (for build process)
+      return 'https://api-not-configured.example.com'
+    }
+    
+    return productionApiUrl
   }
   
   // Development fallback
   return 'http://localhost:8080'
 }
 
-const API_BASE_URL = getApiBaseUrl()
+let API_BASE_URL: string
+try {
+  API_BASE_URL = getApiBaseUrl()
+} catch (error) {
+  // If configuration fails, set a placeholder that will cause clear errors
+  API_BASE_URL = 'https://api-not-configured.example.com'
+}
+
+/**
+ * Gets environment information for debugging
+ * @returns Object with environment details
+ */
+export function getEnvironmentInfo() {
+  return {
+    apiBaseUrl: API_BASE_URL,
+    nodeEnv: process.env.NODE_ENV,
+    hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
+    protocol: typeof window !== 'undefined' ? window.location.protocol : 'unknown',
+    hasApiEnvVar: !!process.env.NEXT_PUBLIC_BOT_API_URL,
+    hasProductionApiEnvVar: !!process.env.NEXT_PUBLIC_API_URL,
+  }
+}
 
 // Create axios instance with default config
 const apiClient = axios.create({
@@ -51,9 +84,6 @@ const apiClient = axios.create({
  */
 export async function verifyWallet(request: VerificationRequest): Promise<VerificationResponse> {
   try {
-    console.log('Submitting verification to bot API...')
-    console.log('Environment info:', getEnvironmentInfo())
-    
     // Validate request data
     if (!request.jwt || !request.wallet || !request.signature) {
       return {
@@ -69,27 +99,30 @@ export async function verifyWallet(request: VerificationRequest): Promise<Verifi
       signature: request.signature
     })
 
-    console.log('Verification response:', response.data)
-
-    // Handle successful response
+    // Handle API response based on status field
     if (response.data.status === 'success') {
       return {
         success: true,
         message: response.data.message
       }
-    } else {
+    } else if (response.data.status === 'error') {
       return {
         success: false,
         error: response.data.message || 'Verification failed',
         details: response.data.details
       }
+    } else {
+      // Fallback for unexpected response format
+      return {
+        success: false,
+        error: 'Unexpected response format',
+        details: 'The server returned an unexpected response format.'
+      }
     }
-  } catch (error: any) {
-    console.error('Verification API error:', error)
-
+  } catch (error: unknown) {
     // Handle different types of errors
     if (axios.isAxiosError(error)) {
-      const axiosError = error as AxiosError<any>
+      const axiosError = error as AxiosError<{ message?: string; details?: string; status?: string }>
       
       if (axiosError.response) {
         // Server responded with error status
@@ -142,10 +175,11 @@ export async function verifyWallet(request: VerificationRequest): Promise<Verifi
     }
 
     // Generic error fallback
+    const errorMessage = error instanceof Error ? error.message : String(error)
     return {
       success: false,
       error: 'Verification failed',
-      details: error.message || 'An unexpected error occurred during verification.'
+      details: errorMessage || 'An unexpected error occurred during verification.'
     }
   }
 }
@@ -159,7 +193,6 @@ export async function checkApiHealth(): Promise<boolean> {
     const response = await apiClient.get('/api/health', { timeout: 5000 })
     return response.data.status === 'healthy'
   } catch (error) {
-    console.warn('Bot API health check failed:', error)
     return false
   }
 }
@@ -170,19 +203,4 @@ export async function checkApiHealth(): Promise<boolean> {
  */
 export function getApiBaseUrl(): string {
   return API_BASE_URL
-}
-
-/**
- * Gets environment information for debugging
- * @returns Object with environment details
- */
-export function getEnvironmentInfo() {
-  return {
-    apiBaseUrl: API_BASE_URL,
-    nodeEnv: process.env.NODE_ENV,
-    hostname: typeof window !== 'undefined' ? window.location.hostname : 'server',
-    protocol: typeof window !== 'undefined' ? window.location.protocol : 'unknown',
-    hasApiEnvVar: !!process.env.NEXT_PUBLIC_BOT_API_URL,
-    hasProductionApiEnvVar: !!process.env.NEXT_PUBLIC_API_URL,
-  }
 }

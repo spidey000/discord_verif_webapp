@@ -110,11 +110,11 @@ function ConfirmationPageContent() {
         })
         setStatus('error')
       }
-    } catch (err: any) {
-      console.error('Verification error:', err)
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : String(err)
       setError({ 
         message: 'Verification failed', 
-        details: err.message || 'An unexpected error occurred during verification.' 
+        details: errorMessage || 'An unexpected error occurred during verification.' 
       })
       setStatus('error')
     }
@@ -281,7 +281,7 @@ function ConfirmationPageContent() {
                       Please request a new verification link from Discord
                     </p>
                     <a 
-                      href="https://discord.gg/your-invite-link" 
+                      href={process.env.NEXT_PUBLIC_DISCORD_INVITE || "https://discord.gg/sendit"} 
                       className="btn-primary inline-flex items-center justify-center gap-2 w-full text-sm sm:text-base py-2 sm:py-3"
                       target="_blank"
                       rel="noopener noreferrer"

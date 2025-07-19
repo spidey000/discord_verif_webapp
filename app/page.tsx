@@ -107,7 +107,7 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md mx-auto">
               <Link 
-                href="https://discord.gg/your-invite-link" 
+                href={process.env.NEXT_PUBLIC_DISCORD_INVITE || "https://discord.gg/sendit"} 
                 className="btn-primary inline-flex items-center justify-center gap-2 text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6 w-full sm:w-auto"
                 target="_blank"
                 rel="noopener noreferrer"
